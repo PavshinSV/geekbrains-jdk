@@ -26,8 +26,8 @@ public class GameWindow extends JFrame {
         JPanel panelBottom = new JPanel(new GridLayout(1, 2));
         panelBottom.add(buttonStart);
         panelBottom.add(buttonEnd);
-        map = new Map();
         settings = new SettingsWindow(this);
+        map = new Map();
 
         add(panelBottom, BorderLayout.SOUTH);
         add(map);
