@@ -4,11 +4,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.Random;
 
 public class Map extends JPanel {
-    private int DOT_PADDING = 5;
+    private final int DOT_PADDING = 5;
     private int gameOverType;
     private final int STATE_DRAW = 0;
     private final int WIN_HUMAN = 1;
@@ -25,11 +24,13 @@ public class Map extends JPanel {
     int panelHeight;
     int cellWidth;
     int cellHeight;
-    private final int HUMAN_DOT = 1;
-    private final int AI_DOT = 2;
-    private final int EMPTY_DOT = 0;
+    private final char HUMAN_DOT = 1;
+    private final char AI_DOT = 2;
+    private final char EMPTY_DOT = 0;
     private int fieldSizeX = 3;
     private int fieldSizeY = 3;
+
+    private int len = 3;
     private char[][] field;
     private Random random;
 
@@ -77,16 +78,14 @@ public class Map extends JPanel {
     }
 
     private boolean checkWin(char c) {
-        int len = 3;
         if (len > fieldSizeY || len > fieldSizeX) {
             throw new RuntimeException("Длина линии победы не может быть длиннее чем размер поля");
         }
         for (int i = 0; i < fieldSizeY; i++) {
-            boolean victory = true;
-            for (int shift = 0; shift < fieldSizeX - len; shift++) {
+            int stop = fieldSizeX - len + 1;
+            for (int shift = 0; shift < stop; shift++) {
                 for (int j = shift; j < shift + len; j++) {
                     if (c != field[i][j]) {
-                        victory = false;
                         break;
                     }
                     if (j == shift + len - 1) {
@@ -97,11 +96,10 @@ public class Map extends JPanel {
         }
 
         for (int i = 0; i < fieldSizeX; i++) {
-            boolean victory = true;
-            for (int shift = 0; shift < fieldSizeY - len; shift++) {
+            int stop = fieldSizeY - len + 1;
+            for (int shift = 0; shift < stop; shift++) {
                 for (int j = shift; j < shift + len; j++) {
                     if (c != field[j][i]) {
-                        victory = false;
                         break;
                     }
                     if (j == shift + len - 1) {
@@ -112,6 +110,39 @@ public class Map extends JPanel {
         }
 
 //TODO: Доделать проверку диагоналей для общего случая
+        int repeatStop=fieldSizeY-len+1;
+        for (int repeat=0;repeat<repeatStop;repeat++){
+            int shiftStop=fieldSizeX-len+1;
+            for(int shift=0;shift<shiftStop;shift++){
+                for (int i=0; i<len;i++){
+                    int y=repeat+i;
+                    int x= shift+i;
+                    if (c!=field[y][x]){
+                        break;
+                    }
+                    if (i == len-1) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        for (int repeat=0;repeat<repeatStop;repeat++){
+            int shiftStop=fieldSizeX-len+1;
+            for(int shift=0;shift<shiftStop;shift++){
+                for (int i=0; i<len;i++){
+                    int y=repeat+len-i-1;
+                    int x= shift+i;
+                    if (c!=field[y][x]){
+                        break;
+                    }
+                    if (i == len-1) {
+                        return true;
+                    }
+                }
+            }
+        }
+
 
         return false;
     }
@@ -145,12 +176,12 @@ public class Map extends JPanel {
         }
 
         field[cellY][cellX] = HUMAN_DOT;
-        if (checkEndGame(HUMAN_DOT,WIN_HUMAN)){
+        if (checkEndGame(HUMAN_DOT, WIN_HUMAN)) {
             return;
         }
         aiTurn();
         repaint();
-        if (checkEndGame(AI_DOT,WIN_AI)){
+        if (checkEndGame(AI_DOT, WIN_AI)) {
             return;
         }
 
@@ -158,33 +189,36 @@ public class Map extends JPanel {
         repaint();
     }
 
-    private void showMessageGameOver(Graphics g){
+    private void showMessageGameOver(Graphics g) {
         g.setColor(Color.DARK_GRAY);
-        g.fillRect(0,200,getWidth(),70);
+        g.fillRect(0, 200, getWidth(), 70);
         g.setColor(Color.YELLOW);
         g.setFont(new Font("Times new roman", Font.BOLD, 48));
-        switch (gameOverType){
+        switch (gameOverType) {
             case STATE_DRAW:
-                g.drawString(MSG_DRAW,180,getHeight()/2);break;
+                g.drawString(MSG_DRAW, 180, getHeight() / 2);
+                break;
             case WIN_HUMAN:
-                g.drawString(MSG_WIN_HUMAN, 70, getHeight()/2);break;
+                g.drawString(MSG_WIN_HUMAN, 70, getHeight() / 2);
+                break;
             case WIN_AI:
-                g.drawString(MSG_WIN_AI, 20, getHeight()/2);break;
+                g.drawString(MSG_WIN_AI, 20, getHeight() / 2);
+                break;
             default:
                 throw new RuntimeException("UNEXPECTED BEHAVIOR");
         }
     }
 
-    private boolean checkEndGame(int dot, int gameOverType) {
-        if (checkWin((char) dot)) {
+    private boolean checkEndGame(char dot, int gameOverType) {
+        if (checkWin(dot)) {
             this.gameOverType = gameOverType;
-            isGameOver=true;
+            isGameOver = true;
             repaint();
             return true;
         }
         if (isMapFull()) {
             this.gameOverType = STATE_DRAW;
-            isGameOver=true;
+            isGameOver = true;
             repaint();
             return true;
         }
@@ -192,14 +226,14 @@ public class Map extends JPanel {
     }
 
     void startNewGame(int mode, int fSzX, int fSzY, int wLen) {
-        fSzX = 5;
-        fSzY = 5;
+//        fSzX = 5;
+//        fSzY = 5;
         fieldSizeX = fSzX;
         fieldSizeY = fSzY;
         initMap(fieldSizeX, fieldSizeY);
-        System.out.printf("Mode: %d\nSize: %d, %d; Length: %d\n-------\n", mode, fSzX, fSzY, wLen);
-        isGameOver=false;
-        isInitialized=true;
+        //System.out.printf("Mode: %d\nSize: %d, %d; Length: %d\n-------\n", mode, fSzX, fSzY, wLen);
+        isGameOver = false;
+        isInitialized = true;
         repaint();
     }
 
@@ -242,7 +276,7 @@ public class Map extends JPanel {
 
             }
         }
-        if(isGameOver){
+        if (isGameOver) {
             showMessageGameOver(g);
         }
     }
