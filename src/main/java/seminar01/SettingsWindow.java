@@ -174,6 +174,7 @@ public class SettingsWindow extends JFrame {
 
     //создадим метод запускающийся при нажатии кнопки СТАРТ (по заданию так просили)
     private void startBtnClick() {
+        //добавляю коммент чтобы гит засчитал за изменения, иначе коммит не получается, а так все уже готово .. как оказалось
         gameWindow.startNewGame(gameMode, gameFieldSizeX, gameFieldSizeY, gameLengthSize);
         setVisible(false);
     }
