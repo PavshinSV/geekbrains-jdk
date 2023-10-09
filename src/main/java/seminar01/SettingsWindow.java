@@ -26,7 +26,6 @@ public class SettingsWindow extends JFrame {
 
     SettingsWindow(GameWindow gameWindow) {
         this.gameWindow = gameWindow;
-        setLocationRelativeTo(this.gameWindow);
         setSize(WINDOW_WIDTH, WINDOW_HIGHT);
 
         //Создаем панель для размещения надписей и кнопочек
@@ -50,7 +49,7 @@ public class SettingsWindow extends JFrame {
 
         //Создадим две радиокнопки
         JRadioButton hThBtn = new JRadioButton("Человек против человека");
-        JRadioButton hTcBtn = new JRadioButton("Человек против компьютера",true);
+        JRadioButton hTcBtn = new JRadioButton("Человек против компьютера", true);
         //Зададим им шрифт поменьше и по спокойнее. Все таки это варианты, а не заголовок
         hTcBtn.setFont(new Font("Verdana", Font.PLAIN, 10));
         hThBtn.setFont(new Font("Verdana", Font.PLAIN, 10));
@@ -143,8 +142,8 @@ public class SettingsWindow extends JFrame {
         hThBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(hThBtn.isSelected()){
-                    gameMode=HUMAN_TO_HUMAN;
+                if (hThBtn.isSelected()) {
+                    gameMode = HUMAN_TO_HUMAN;
                 }
             }
         });
@@ -152,8 +151,8 @@ public class SettingsWindow extends JFrame {
         hTcBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (hTcBtn.isSelected()){
-                    gameMode=HUMAN_TO_AI;
+                if (hTcBtn.isSelected()) {
+                    gameMode = HUMAN_TO_AI;
                 }
             }
         });
@@ -162,20 +161,34 @@ public class SettingsWindow extends JFrame {
     }
 
     //Замутим проверку на соответствие длины линии размеру поля
-    private void checkLength(){
-        if (gameLengthSize>gameFieldSizeX){
-            gameLengthSize=gameFieldSizeX;
+    private void checkLength() {
+        if (gameLengthSize > gameFieldSizeX) {
+            gameLengthSize = gameFieldSizeX;
         }
-        if (gameLengthSize>gameFieldSizeY){
-            gameLengthSize=gameFieldSizeY;
+        if (gameLengthSize > gameFieldSizeY) {
+            gameLengthSize = gameFieldSizeY;
         }
         lengthValueSlider.setValue(gameLengthSize);
         lengthSizeCurrentLabel.setText("Длина линии: " + gameLengthSize);
     }
 
     //создадим метод запускающийся при нажатии кнопки СТАРТ (по заданию так просили)
-    private void startBtnClick(){
+    private void startBtnClick() {
         gameWindow.startNewGame(gameMode, gameFieldSizeX, gameFieldSizeY, gameLengthSize);
         setVisible(false);
+    }
+
+    public void setLocationSettings() {
+        //Получаем значение верхнего левого угла основного игрового окна
+        Point gameWindowLocation = gameWindow.getLocation();
+        System.out.println("1. " + gameWindowLocation);
+
+        //Получаем размер основного игрового окна
+        Dimension gameWindowSize = gameWindow.getSize();
+        Point centerGameWindow = new Point();
+        centerGameWindow.x = gameWindowLocation.x + gameWindowSize.width / 2;
+        centerGameWindow.y = gameWindowLocation.y + gameWindowSize.height / 2;
+        Point settingsWindowLocation = new Point(centerGameWindow.x-WINDOW_WIDTH/2, centerGameWindow.y-WINDOW_HIGHT/2);
+        setLocation(settingsWindowLocation);
     }
 }

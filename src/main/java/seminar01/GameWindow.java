@@ -42,6 +42,7 @@ public class GameWindow extends JFrame {
         buttonStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                settings.setLocationSettings();
                 settings.setVisible(true);
             }
         });
