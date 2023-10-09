@@ -234,6 +234,7 @@ public class Map extends JPanel {
         //System.out.printf("Mode: %d\nSize: %d, %d; Length: %d\n-------\n", mode, fSzX, fSzY, wLen);
         isGameOver = false;
         isInitialized = true;
+        len=wLen;
         repaint();
     }
 

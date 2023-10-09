@@ -14,7 +14,9 @@ public class SettingsWindow extends JFrame {
     private int gameFieldSizeX = 3;
     private int gameFieldSizeY = 3;
     private int gameLengthSize = 3;
-    private int gameMode = 0;
+    private final int HUMAN_TO_HUMAN = 1;
+    private final int HUMAN_TO_AI = 0;
+    private int gameMode = HUMAN_TO_AI;
 
     private JSlider gameSizeSlider;
     private JSlider lengthValueSlider;
@@ -48,8 +50,8 @@ public class SettingsWindow extends JFrame {
 
         //Создадим две радиокнопки
         JRadioButton hThBtn = new JRadioButton("Человек против человека");
-        JRadioButton hTcBtn = new JRadioButton("Человек против компьютера");
-        //зададим им шрифт поменьше и по спокойнее. всетаки это варианты, а не заголовок
+        JRadioButton hTcBtn = new JRadioButton("Человек против компьютера",true);
+        //Зададим им шрифт поменьше и по спокойнее. Все таки это варианты, а не заголовок
         hTcBtn.setFont(new Font("Verdana", Font.PLAIN, 10));
         hThBtn.setFont(new Font("Verdana", Font.PLAIN, 10));
         //Создадим группу кнопок чтобы можно было указать что эти кнопки относятся к одной группе
@@ -115,8 +117,7 @@ public class SettingsWindow extends JFrame {
         btnStart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                gameWindow.startNewGame(gameMode, gameFieldSizeX, gameFieldSizeY, gameLengthSize);
-                setVisible(false);
+                startBtnClick();
             }
         });
 
@@ -139,9 +140,24 @@ public class SettingsWindow extends JFrame {
             }
         });
 
+        hThBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(hThBtn.isSelected()){
+                    gameMode=HUMAN_TO_HUMAN;
+                }
+            }
+        });
 
+        hTcBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (hTcBtn.isSelected()){
+                    gameMode=HUMAN_TO_AI;
+                }
+            }
+        });
         settingsPanel.add(btnStart);
-
         add(settingsPanel);
     }
 
@@ -155,5 +171,11 @@ public class SettingsWindow extends JFrame {
         }
         lengthValueSlider.setValue(gameLengthSize);
         lengthSizeCurrentLabel.setText("Длина линии: " + gameLengthSize);
+    }
+
+    //создадим метод запускающийся при нажатии кнопки СТАРТ (по заданию так просили)
+    private void startBtnClick(){
+        gameWindow.startNewGame(gameMode, gameFieldSizeX, gameFieldSizeY, gameLengthSize);
+        setVisible(false);
     }
 }
