@@ -5,8 +5,9 @@ import seminar01.chat_client.server.Server;
 
 public class Main {
     public static void main(String[] args) {
-        Server server = new Server();
-        Client client = new Client();
+        Internet internet = new Internet();
+        Server server = new Server(internet);
+        Client client = new Client(internet);
 
         server.run();
         client.run();
